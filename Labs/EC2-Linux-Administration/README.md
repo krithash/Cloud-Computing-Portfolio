@@ -1,8 +1,8 @@
-# AWS EC2 Windows Administration and IIS Website Hosting
+# AWS EC2 Linux Administration and Apache Website Hosting
 
 ## Objective
 
-Deploy and administer a Windows-based Amazon EC2 instance, perform Windows Server management tasks, create and manage local administrator accounts, modify the system hostname, and host a static website using Internet Information Services (IIS).
+Deploy and administer a Linux-based Amazon EC2 instance, perform Linux system administration tasks such as hostname configuration and user management, and host a static website using the Apache HTTP Server.
 
 ---
 
@@ -16,16 +16,16 @@ Deploy and administer a Windows-based Amazon EC2 instance, perform Windows Serve
 
 ### Operating System
 
-* Microsoft Windows Server
+* Amazon Linux
 
 ### Networking
 
-* Remote Desktop Protocol (RDP)
+* Secure Shell (SSH)
 * HTTP
 
 ### Web Services
 
-* Internet Information Services (IIS)
+* Apache HTTP Server (httpd)
 
 ---
 
@@ -37,22 +37,22 @@ Deploy and administer a Windows-based Amazon EC2 instance, perform Windows Serve
                             |
                     +----------------+
                     | Security Group |
-                    | 3389 (RDP)     |
+                    | 22 (SSH)       |
                     | 80 (HTTP)      |
                     +----------------+
                             |
                             |
                     +----------------+
-                    | Windows EC2    |
-                    | Windows Server |
+                    | Linux EC2      |
+                    | Amazon Linux   |
                     +----------------+
                       |            |
                       |            |
-               RDP Access      IIS Web Server
+                 SSH Access     Apache Server
                       |            |
                       |            |
-              Administrator     index.html
-                 Login         Website Files
+                EC2 User      index.html
+                              Website Files
                                    |
                                    |
                                    v
@@ -64,111 +64,145 @@ Deploy and administer a Windows-based Amazon EC2 instance, perform Windows Serve
 
 ### Architecture Description
 
-* A Windows-based Amazon EC2 instance was deployed in AWS.
-* A Security Group was configured to allow RDP (Port 3389) and HTTP (Port 80) traffic.
-* The EC2 instance was remotely administered using Remote Desktop Protocol (RDP).
-* Windows Server administration tasks such as user creation and hostname modification were performed.
-* Internet Information Services (IIS) was installed and configured.
-* A static HTML webpage was deployed inside the IIS web root directory.
+* A Linux-based Amazon EC2 instance was deployed in AWS.
+* A Security Group was configured to allow SSH (Port 22) and HTTP (Port 80) traffic.
+* The EC2 instance was administered through EC2 Instance Connect.
+* Linux administration tasks such as hostname modification and user management were performed.
+* Apache HTTP Server was installed and configured.
+* A static HTML webpage was deployed and served through Apache.
 * The hosted webpage was successfully accessed using the EC2 instance's public IPv4 address.
 
 ---
 
 ## Project Overview
 
-This project demonstrates the deployment and administration of a Windows Server environment on AWS. The EC2 instance was configured for secure remote access, local user management was performed, system hostname configuration was verified and modified, and a static website was hosted using IIS.
+This project demonstrates the deployment and administration of a Linux server environment on AWS. The EC2 instance was configured for secure remote access, hostname management and user administration tasks were performed, and a static website was hosted using Apache HTTP Server.
 
 ---
 
 ## Implementation
 
-### 1. Windows EC2 Deployment
+### 1. Linux EC2 Deployment
 
-A Windows EC2 instance was launched using a Free Tier eligible Amazon Machine Image (AMI). A new RSA key pair was generated for secure authentication, and a Security Group was configured to allow Remote Desktop Protocol (RDP) access.
-
-#### Outcome
-
-* Successfully launched a Windows EC2 instance.
-* Assigned a public IPv4 address for remote administration.
-* Configured secure access using an RSA key pair.
-
----
-
-### 2. Remote Administration Using RDP
-
-The Administrator password was retrieved and decrypted using the downloaded PEM key pair. Remote Desktop Connection (mstsc) was then used to access the Windows Server environment.
+A Linux EC2 instance was launched using a Free Tier eligible Amazon Linux AMI. A new RSA key pair was generated for authentication, and a Security Group was configured to allow SSH access.
 
 #### Outcome
 
-* Successfully established an RDP connection.
-* Obtained full administrative access to the Windows Server instance.
+* Successfully launched a Linux EC2 instance.
+* Assigned a public IPv4 address.
+* Enabled secure administrative access.
 
 ---
 
-### 3. Local User Administration
+### 2. Hostname Verification and Modification
 
-A new local user account was created using the Local Users and Groups management console. The account was added to the Administrators group and verified by logging into the server using the newly created user credentials.
+The existing hostname was verified using Linux terminal commands. The hostname was then modified using the hostnamectl utility and verified after the change.
 
 #### Activities Performed
 
-* Created a new local user account.
-* Assigned Administrator privileges.
-* Verified successful user creation.
-* Logged in using the newly created administrative account.
+* Verified the current hostname.
+* Updated the hostname to a custom value.
+* Confirmed successful hostname modification.
+
+#### Commands Used
+
+```bash
+hostname
+
+sudo hostnamectl set-hostname Linux-Server
+
+hostname
+```
 
 #### Outcome
 
-* Successfully implemented local user management and access control within Windows Server.
+* Successfully customized and verified the Linux server hostname.
 
 ---
 
-### 4. Hostname Verification and Modification
+### 3. Linux User Administration
 
-The existing hostname was verified using Command Prompt. System Properties was then used to modify the hostname, followed by a system restart to apply the changes.
+A new user account was created and assigned administrative privileges using the wheel group. User switching was then performed to verify successful account creation and access permissions.
 
 #### Activities Performed
 
-* Verified the existing hostname.
-* Modified the hostname to a custom value.
-* Restarted the system.
-* Confirmed successful hostname update.
+* Created a new user account.
+* Configured a password for the user.
+* Granted sudo privileges.
+* Switched to the newly created user account.
+
+#### Commands Used
+
+```bash
+sudo adduser student
+
+sudo passwd student
+
+sudo usermod -aG wheel student
+
+su - student
+```
 
 #### Outcome
 
-* Successfully customized and verified the server hostname.
+* Successfully implemented Linux user and privilege management.
 
 ---
 
-### 5. IIS Web Server Installation and Website Hosting
+### 4. Apache Web Server Installation and Website Hosting
 
-HTTP access was enabled by configuring an inbound Security Group rule for Port 80. The IIS Web Server role was installed, and a custom HTML page was deployed within the IIS web root directory.
-
-The hosted website was then accessed through the EC2 instance's public IPv4 address.
+HTTP access was enabled through the Security Group by allowing inbound traffic on Port 80. Apache HTTP Server was installed, configured, and started. A custom HTML webpage was then created and deployed.
 
 #### Activities Performed
 
-* Configured HTTP inbound access.
-* Installed IIS Web Server.
-* Created and deployed an HTML webpage.
-* Hosted the webpage through the EC2 instance.
-* Verified successful public access using a web browser.
+* Installed Apache HTTP Server.
+* Started and enabled the Apache service.
+* Created a custom HTML webpage.
+* Deployed the webpage to the Apache web root directory.
+* Verified public accessibility through a browser.
+
+#### Commands Used
+
+```bash
+sudo su
+
+yum install httpd -y
+
+systemctl start httpd
+
+systemctl enable httpd
+
+cd /var/www/html
+
+mkdir website
+
+cd website
+
+touch index.html
+
+echo "<h1>Hello from Linux EC2 Website</h1>" > index.html
+
+cat index.html
+
+cp index.html /var/www/html
+```
 
 #### Outcome
 
-* Successfully hosted a static website on AWS Windows EC2.
+* Successfully hosted a static website on AWS Linux EC2.
 
 ---
 
 ## Key Learnings
 
 * Amazon EC2 deployment and configuration
-* Windows Server administration in the cloud
-* Remote administration using RDP
+* Linux server administration in the cloud
+* SSH-based remote access
 * Security Group configuration and management
-* Local user and administrator account management
+* Linux user and privilege management
 * Hostname configuration and verification
-* IIS installation and configuration
-* Static website hosting on Windows Server
+* Apache HTTP Server installation and configuration
+* Static website hosting on Linux
 * Public accessibility of cloud-hosted services
 
 ---
@@ -176,16 +210,16 @@ The hosted website was then accessed through the EC2 instance's public IPv4 addr
 ## Skills Demonstrated
 
 * AWS EC2
-* Windows Server Administration
-* Remote Desktop Protocol (RDP)
+* Linux Administration
+* SSH
 * Security Group Management
-* IIS Web Server Administration
+* User and Permission Management
+* Apache HTTP Server Administration
 * Website Hosting
 * Cloud Infrastructure Management
-* Basic System Administration
 
 ---
 
 ## Conclusion
 
-Successfully deployed and administered a Windows Server environment on AWS EC2. The project demonstrated practical cloud administration skills including remote access configuration, user management, hostname customization, security group management, and IIS-based website hosting. The final outcome was a publicly accessible website hosted on a Windows Server running in the AWS Cloud.
+Successfully deployed and administered a Linux-based Amazon EC2 environment on AWS. The project demonstrated practical cloud and Linux administration skills including hostname management, user administration, privilege assignment, Apache web server configuration, and static website hosting. The final outcome was a publicly accessible website hosted on an AWS Linux EC2 instance.
