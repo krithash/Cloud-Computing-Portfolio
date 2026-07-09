@@ -1,158 +1,211 @@
-AWS Elastic Load Balancing (ELB)
-Objective
+# AWS Elastic Load Balancing (ELB)
 
-Learn and implement the four types of AWS Elastic Load Balancers—Classic Load Balancer (CLB), Application Load Balancer (ALB), Network Load Balancer (NLB), and Gateway Load Balancer (GWLB). Configure EC2 instances as backend servers, distribute incoming traffic, and understand load balancing concepts, target groups, health checks, and high availability across multiple Availability Zones.
+## Objective
 
-Services and Technologies Used
-AWS Services
-Amazon EC2
-Elastic Load Balancing (ELB)
-Classic Load Balancer (CLB)
-Application Load Balancer (ALB)
-Network Load Balancer (NLB)
-Gateway Load Balancer (GWLB)
-Target Groups
-Security Groups
-Amazon VPC
-Networking Concepts
-HTTP
-TCP
-Health Checks
-Target Registration
-High Availability
-Multi-AZ Deployment
-Architecture Diagram
+Create and configure AWS Elastic Load Balancers (Classic Load Balancer, Application Load Balancer, Network Load Balancer, and Gateway Load Balancer) to distribute incoming traffic across multiple Amazon EC2 instances. Learn load balancing concepts, health checks, target groups, and high availability using multiple Availability Zones.
+
+---
+
+# Services and Technologies Used
+
+## AWS Services
+
+- Amazon EC2
+- Elastic Load Balancing (ELB)
+- Classic Load Balancer (CLB)
+- Application Load Balancer (ALB)
+- Network Load Balancer (NLB)
+- Gateway Load Balancer (GWLB)
+- Target Groups
+- Security Groups
+- Amazon VPC
+
+## Networking Concepts
+
+- HTTP
+- TCP
+- Health Checks
+- Target Registration
+- Traffic Distribution
+- High Availability
+- Multi-AZ Deployment
+
+---
+
+# Architecture Diagram
+
+```text
                     Internet Users
                           |
-                    DNS Endpoint
                           |
-             +---------------------------+
-             | Elastic Load Balancer     |
-             | (CLB / ALB / NLB / GWLB)  |
-             +---------------------------+
-                   |               |
-          Health Checks      Traffic Distribution
-                   |               |
-         -------------------------------
-         |                             |
-   +-------------+               +-------------+
-   | EC2 Instance|               | EC2 Instance|
-   |   Web-01    |               |   Web-02    |
-   +-------------+               +-------------+
-Architecture Description
-Multiple Amazon EC2 instances were launched to host web applications.
-A load balancer was created to distribute incoming client requests.
-Health checks continuously monitored backend instance availability.
-Target instances were automatically registered with the load balancer.
-Traffic was distributed among healthy instances.
-High availability was achieved by deploying resources across multiple Availability Zones.
-Project Overview
+                    ELB DNS Endpoint
+                          |
+          +--------------------------------+
+          | Elastic Load Balancer (ELB)    |
+          | CLB / ALB / NLB / GWLB         |
+          +--------------------------------+
+                  |                |
+          Health Checks     Load Balancing
+                  |                |
+          ------------------------------
+          |                            |
+    +--------------+            +--------------+
+    | EC2 Instance |            | EC2 Instance |
+    |   Web-01     |            |   Web-02     |
+    +--------------+            +--------------+
+```
 
-This project demonstrates the implementation of AWS Elastic Load Balancing to improve application availability, scalability, and fault tolerance. Different ELB types were configured to understand their use cases, routing mechanisms, health monitoring, and traffic distribution capabilities. Backend EC2 instances hosted identical web pages, allowing verification of load balancing through the DNS endpoint.
+---
 
-Implementation
-1. EC2 Instance Preparation
+# Architecture Description
 
-Multiple EC2 instances were launched to act as backend web servers.
+- Multiple Amazon EC2 instances were launched to host web applications.
+- Elastic Load Balancer was configured to distribute incoming client requests.
+- Health checks continuously monitored backend instance availability.
+- Only healthy EC2 instances received client traffic.
+- Resources were deployed across multiple Availability Zones to improve availability and fault tolerance.
+- Users accessed the application through the Load Balancer DNS endpoint instead of directly accessing EC2 instances.
 
-Activities Performed
-Created multiple EC2 instances.
-Renamed instances for easy identification.
-Installed Apache Web Server.
-Created simple HTML webpages.
-Verified web server accessibility.
-Outcome
+---
 
-Successfully prepared backend web servers for load balancing.
+# Project Overview
 
-2. Classic Load Balancer (CLB)
+This project demonstrates the implementation of AWS Elastic Load Balancing (ELB) to improve application scalability, availability, and fault tolerance. Multiple EC2 instances were configured as backend web servers, and different types of load balancers were deployed to understand their functionality, traffic routing mechanisms, and monitoring capabilities.
 
-Configured a Classic Load Balancer to distribute HTTP traffic across EC2 instances.
+---
 
-Activities Performed
-Created a Classic Load Balancer.
-Selected Internet-facing scheme.
-Chose multiple Availability Zones.
-Configured HTTP Listener (Port 80).
-Created Security Group.
-Configured Health Check.
-Registered EC2 instances.
-Accessed the DNS endpoint.
-Outcome
+# Implementation
 
-Traffic was successfully distributed among backend EC2 instances using CLB.
+## 1. EC2 Instance Preparation
 
-3. Application Load Balancer (ALB)
+Multiple Amazon EC2 instances were created to serve as backend web servers.
 
-Configured an Application Load Balancer using Target Groups for Layer 7 HTTP routing.
+### Activities Performed
 
-Activities Performed
-Created an Application Load Balancer.
-Configured Listener on Port 80.
-Created Target Group.
-Registered EC2 instances.
-Verified Target Health.
-Accessed the ALB DNS endpoint.
-Outcome
+- Created multiple EC2 instances.
+- Renamed the instances.
+- Installed Apache Web Server.
+- Created sample HTML webpages.
+- Verified web server accessibility.
 
-Successfully implemented Layer 7 load balancing with Application Load Balancer.
+### Outcome
 
-4. Network Load Balancer (NLB)
+Successfully prepared backend EC2 instances for load balancing.
 
-Configured a Network Load Balancer for high-performance Layer 4 traffic distribution.
+---
 
-Activities Performed
-Created a Network Load Balancer.
-Configured TCP Listener.
-Created Target Group.
-Registered backend instances.
-Verified healthy targets.
-Tested NLB DNS endpoint.
-Outcome
+## 2. Classic Load Balancer (CLB)
 
-Successfully configured Layer 4 load balancing with low latency.
+Configured a Classic Load Balancer to distribute HTTP requests across EC2 instances.
 
-5. Gateway Load Balancer (GWLB)
+### Activities Performed
 
-Configured a Gateway Load Balancer for transparent deployment of virtual network appliances.
+- Created a Classic Load Balancer.
+- Selected Internet-facing scheme.
+- Selected multiple Availability Zones.
+- Configured HTTP Listener (Port 80).
+- Created a Security Group.
+- Configured Health Check.
+- Registered EC2 instances.
+- Tested the Load Balancer DNS endpoint.
 
-Activities Performed
-Created Gateway Load Balancer.
-Configured Gateway Listener.
-Created Target Group.
-Registered appliance instances.
-Verified healthy targets.
-Monitored GWLB metrics.
-Outcome
+### Outcome
 
-Successfully deployed Gateway Load Balancer and validated target health and traffic processing.
+Traffic was successfully distributed among healthy EC2 instances using Classic Load Balancer.
 
-Key Learnings
-Elastic Load Balancing Concepts
-Classic Load Balancer
-Application Load Balancer
-Network Load Balancer
-Gateway Load Balancer
-Target Groups
-Health Checks
-Listener Configuration
-Security Groups
-Traffic Distribution
-High Availability
-Multi-AZ Deployment
-Fault Tolerance
-Skills Demonstrated
-Amazon EC2 Administration
-Elastic Load Balancing
-Classic Load Balancer Configuration
-Application Load Balancer Configuration
-Network Load Balancer Configuration
-Gateway Load Balancer Configuration
-Target Group Management
-Health Check Configuration
-High Availability Design
-AWS Networking
-Cloud Infrastructure Deployment
-Conclusion
+---
 
-Successfully implemented AWS Elastic Load Balancing by configuring Classic, Application, Network, and Gateway Load Balancers with multiple Amazon EC2 instances. The project demonstrated how load balancers distribute incoming traffic, monitor backend instance health, improve application availability, and provide fault tolerance across multiple Availability Zones. This hands-on lab strengthened practical knowledge of AWS networking, scalable cloud architectures, and high-availability application deployment.
+## 3. Application Load Balancer (ALB)
+
+Configured an Application Load Balancer using Target Groups for Layer 7 routing.
+
+### Activities Performed
+
+- Created an Application Load Balancer.
+- Configured HTTP Listener.
+- Created a Target Group.
+- Registered EC2 instances.
+- Verified healthy targets.
+- Tested the ALB DNS endpoint.
+
+### Outcome
+
+Successfully implemented Layer 7 load balancing using Application Load Balancer.
+
+---
+
+## 4. Network Load Balancer (NLB)
+
+Configured a Network Load Balancer to distribute TCP traffic with low latency.
+
+### Activities Performed
+
+- Created a Network Load Balancer.
+- Configured TCP Listener.
+- Created a Target Group.
+- Registered EC2 instances.
+- Verified healthy targets.
+- Tested the NLB DNS endpoint.
+
+### Outcome
+
+Successfully implemented high-performance Layer 4 load balancing using Network Load Balancer.
+
+---
+
+## 5. Gateway Load Balancer (GWLB)
+
+Configured a Gateway Load Balancer to deploy and manage virtual network appliances.
+
+### Activities Performed
+
+- Created a Gateway Load Balancer.
+- Configured Gateway Listener.
+- Created a Target Group.
+- Registered appliance instances.
+- Verified target health.
+- Monitored Gateway Load Balancer metrics.
+
+### Outcome
+
+Successfully configured Gateway Load Balancer and validated traffic processing through healthy targets.
+
+---
+
+# Key Learnings
+
+- Elastic Load Balancing Concepts
+- Classic Load Balancer (CLB)
+- Application Load Balancer (ALB)
+- Network Load Balancer (NLB)
+- Gateway Load Balancer (GWLB)
+- Target Groups
+- Listener Configuration
+- Health Checks
+- Security Groups
+- Traffic Distribution
+- High Availability
+- Multi-AZ Architecture
+- Fault Tolerance
+
+---
+
+# Skills Demonstrated
+
+- Amazon EC2 Administration
+- AWS Elastic Load Balancing
+- Classic Load Balancer Configuration
+- Application Load Balancer Configuration
+- Network Load Balancer Configuration
+- Gateway Load Balancer Configuration
+- Target Group Management
+- Health Check Configuration
+- AWS Networking
+- High Availability Design
+- Cloud Infrastructure Deployment
+
+---
+
+# Conclusion
+
+Successfully deployed and configured AWS Elastic Load Balancing services, including Classic Load Balancer, Application Load Balancer, Network Load Balancer, and Gateway Load Balancer. The project demonstrated how ELB distributes traffic across multiple EC2 instances, performs health monitoring, improves application availability, and provides fault tolerance through multi-Availability Zone deployments. This hands-on implementation strengthened practical skills in AWS networking, cloud infrastructure, and scalable application deployment.
